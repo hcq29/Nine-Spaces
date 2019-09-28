@@ -65,25 +65,20 @@
                     console.log(chooesImg0.naturalWidth);
                     var width = chooesImg0.naturalWidth * 0.33333333;
                     var height = chooesImg0.naturalHeight * 0.33333333;
-                    if(i == 0){
-                        ctx.drawImage(chooesImg,0,0,width,height,0,0,mylong,mylong);
-                    }else if(i == 1){
-                        ctx.drawImage(chooesImg,width,0,width,height,0,0,mylong,mylong);
-                    }else if(i == 2){
-                        ctx.drawImage(chooesImg,width*2,0,width,height,0,0,mylong,mylong);
-                    }else if(i == 3){
-                        ctx.drawImage(chooesImg,0,height,width,height,0,0,mylong,mylong);
-                    }else if(i == 4){
-                        ctx.drawImage(chooesImg,width,height,width,height,0,0,mylong,mylong);
-                    }else if(i == 5){
-                        ctx.drawImage(chooesImg,width*2,height,width,height,0,0,mylong,mylong);
-                    }else if(i == 6){
-                        ctx.drawImage(chooesImg,0,height*2,width,height,0,0,mylong,mylong);
-                    }else if(i == 7){
-                        ctx.drawImage(chooesImg,width,height*2,width,height,0,0,mylong,mylong);
-                    }else if(i == 8){
-                        ctx.drawImage(chooesImg,width*2,height*2,width,height,0,0,mylong,mylong);
-                        imgBox.hidden = true;
+                    switch(i){
+                        case 0: ctx.drawImage(chooesImg,0,0,width,height,0,0,mylong,mylong); break;
+                        case 1: ctx.drawImage(chooesImg,width,0,width,height,0,0,mylong,mylong); break;
+                        case 2: ctx.drawImage(chooesImg,width*2,0,width,height,0,0,mylong,mylong); break;
+                        case 3: ctx.drawImage(chooesImg,0,height,width,height,0,0,mylong,mylong); break;
+                        case 4: ctx.drawImage(chooesImg,width,height,width,height,0,0,mylong,mylong); break;
+                        case 5: ctx.drawImage(chooesImg,width*2,height,width,height,0,0,mylong,mylong); break;
+                        case 6: ctx.drawImage(chooesImg,0,height*2,width,height,0,0,mylong,mylong); break;
+                        case 7: ctx.drawImage(chooesImg,width,height*2,width,height,0,0,mylong,mylong); break;
+                        case 8: 
+                            ctx.drawImage(chooesImg,width*2,height*2,width,height,0,0,mylong,mylong);
+                            imgBox.hidden = true;
+                            break;
+                        default: break;
                     }
                     let curSrc = c.toDataURL("image/png");
                     var imgelse = document.createElement('img');
@@ -92,7 +87,6 @@
                 }
             }, 10);
         }
-
     </script>
 </body>
 </html>
