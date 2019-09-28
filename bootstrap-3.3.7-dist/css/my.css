@@ -1,0 +1,110 @@
+body{
+    height: 100%;
+    width: 100%;
+}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border-radius: 4px;
+    padding: 1.2rem 1.6rem;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+    font-size: 3rem;
+}
+.file input {
+    position: absolute;
+    font-size: 10rem;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+.jumbotron {
+    position: relative;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);
+    background: #020031;
+    background: rgb(255, 255, 255);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020031",endColorstr="#6d3353",GradientType=1);
+}
+.masthead {
+    width: 100%;
+    margin-bottom: 0;
+    color: #fff;
+}
+.main{
+    position: relative;
+    width: 100%;
+    top: 2rem;
+}
+.show{
+    width: 400px;
+    height: 400px;
+    background: #1E88C7;
+}
+.thumbnail {
+    display: block;
+    overflow: hidden;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: left;
+    max-width: 400px;
+    min-width: 400px;
+    min-height: 400px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+#last{
+    height: 400px;
+    padding: 1px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: left;
+    max-width: 400px;
+    min-width: 400px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+#last img{
+    width: 130px;
+    height: 130px;
+    margin: 1px;
+}
+#imgBox{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+#imgBox img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
+.btn {
+    padding: 9px 30px;
+    margin: 20px;
+}

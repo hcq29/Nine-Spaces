@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nine Spaces</title>
+    <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap-3.3.7-dist/css/my.css" rel="stylesheet">
+</head>
+<body>
+    <div class="jumbotron masthead">
+        <div class="file">
+            选择正方形图片
+            <input type="file" name="file" id="change" >
+        </div>
+        <div class="main">
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="thumbnail">
+                    <img id="chooesImg">
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-6">
+                <div id="last">
+                </div>
+                <div id="imgBox" hidden><img src="loading.jpg" width="100" height="100"></div>
+            </div>
+            <button id="btn" class="btn btn-info">生成图片</button>
+        </div>
+    </div>
+    
+    <script>
+
+        var btn = document.getElementById('btn');
+        var last = document.getElementById('last');
+        var chooesImg = document.getElementById('chooesImg');
+            var chooesImg0 = document.getElementsByTagName("img")[0];
+        var change = document.getElementById('change');
+        var imgBox = document.getElementById('imgBox');
+        
+        change.onchange = function(event){
+            let url = window.URL || window.webkitURL;
+            console.log(url.createObjectURL(this.files[0]));//this.files[0]为选中的文件(索引为0因为是单选一个),这里是图片
+            let img = new Image();              //手动创建一个Image对象
+            img.src = url.createObjectURL(this.files[0]);//创建Image的对象的url
+            img.onload = function () {
+                if(this.height != this.width){
+                    alert('请选择正方形图片！');
+                }else{
+                    var file = event.target.files[0];
+                    url = URL.createObjectURL(file);
+                    chooesImg.src = url;
+                }
+            }
+        }
+        
+        
+        btn.onclick  = function(){
+            imgBox.hidden = false;
+            last.innerHTML = "";
+            setTimeout(() => {
+                for(var i = 0; i < 9 ; i++){
+                    let c = document.createElement('canvas'),
+                        ctx = c.getContext('2d');
+                    let mylong = 200;
+                    c.width = mylong;
+                    c.height = mylong;
+                    console.log(chooesImg0.naturalWidth);
+                    var width = chooesImg0.naturalWidth * 0.33333333;
+                    var height = chooesImg0.naturalHeight * 0.33333333;
+                    if(i == 0){
+                        ctx.drawImage(chooesImg,0,0,width,height,0,0,mylong,mylong);
+                    }else if(i == 1){
+                        ctx.drawImage(chooesImg,width,0,width,height,0,0,mylong,mylong);
+                    }else if(i == 2){
+                        ctx.drawImage(chooesImg,width*2,0,width,height,0,0,mylong,mylong);
+                    }else if(i == 3){
+                        ctx.drawImage(chooesImg,0,height,width,height,0,0,mylong,mylong);
+                    }else if(i == 4){
+                        ctx.drawImage(chooesImg,width,height,width,height,0,0,mylong,mylong);
+                    }else if(i == 5){
+                        ctx.drawImage(chooesImg,width*2,height,width,height,0,0,mylong,mylong);
+                    }else if(i == 6){
+                        ctx.drawImage(chooesImg,0,height*2,width,height,0,0,mylong,mylong);
+                    }else if(i == 7){
+                        ctx.drawImage(chooesImg,width,height*2,width,height,0,0,mylong,mylong);
+                    }else if(i == 8){
+                        ctx.drawImage(chooesImg,width*2,height*2,width,height,0,0,mylong,mylong);
+                        imgBox.hidden = true;
+                    }
+                    let curSrc = c.toDataURL("image/png");
+                    var imgelse = document.createElement('img');
+                    imgelse.src = curSrc;
+                    last.append(imgelse);
+                }
+            }, 10);
+        }
+
+    </script>
+</body>
+</html>
