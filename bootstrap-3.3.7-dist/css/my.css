@@ -53,21 +53,24 @@ body{
     background: #1E88C7;
 }
 .thumbnail {
-    display: block;
+    display: flex;
+    align-items: center;
     overflow: hidden;
     margin-right: auto;
     margin-left: auto;
-    text-align: left;
     max-width: 400px;
     min-width: 400px;
     min-height: 400px;
-    line-height: 1.42857143;
+    max-height: 400px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
     -webkit-transition: border .2s ease-in-out;
     -o-transition: border .2s ease-in-out;
     transition: border .2s ease-in-out;
+}
+.thumbnail img{
+    width: 400px;
 }
 #last{
     height: 400px;
