@@ -1,120 +1,166 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Nine Spaces</title>
-    <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
-    <link href="bootstrap-3.3.7-dist/css/my.css" rel="stylesheet">
-</head>
-<body>
-    <div class="jumbotron masthead">
-        <!-- 选择图片 -->
-        <div class="file">
-            选择图片
-            <input type="file" name="file" id="change" >
-        </div>
-        <!-- 图片展示 -->
-        <div class="main">
-            <!-- 展示图片 -->
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <div class="thumbnail">
-                    <img id="chooesImg">
-                </div>
-            </div>
-            <!-- 九空格 -->
-            <div class="col-sm-6 col-md-6 col-lg-6">
-                <div id="last">
-                </div>
-                <div id="imgBox" hidden><img src="loading.jpg" width="100" height="100"></div>
-            </div>
-            <!-- 生成图片按钮 -->
-            <button id="btn" class="btn btn-info">生成图片</button>
-        </div>
-    </div>
-    
-    <script>
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Nine Spaces</title>
 
-        var btn = document.getElementById('btn');
-        var last = document.getElementById('last');
-        var chooesImg = document.getElementById('chooesImg'),
-            chooesImg0 = document.getElementsByTagName("img")[0];
-        var change = document.getElementById('change');
-        var imgBox = document.getElementById('imgBox');
+        <!-- Bootstrap -->
+        <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/my.css">
         
-        // 当从本地选择页面后出发onchange事件
-        change.onchange = function(event){
-            let url = window.URL || window.webkitURL;
-            // console.log(url.createObjectURL(this.files[0]));this.files[0]为选中的文件(索引为0因为是单选一个),这里是图片
-            let img = new Image();              //手动创建一个Image对象
-            img.src = url.createObjectURL(this.files[0]);//创建Image的对象的url
-            img.onload = function () {
+    </head>
+    <body>
+
+        <div class="jumbotron masthead">
+            <div class="container">
+                <!-- 选择图片 -->
+                <div class="file">
+                    选择图片
+                    <input type="file" name="file" id="change"/>
+                </div>
+                <!-- 定义选项 -->
+                <div class="custom">
+                    <div class='left'>
+                        背景颜色
+                        <input type="color" class="input_color" name="bgcolor" id="select_color" value="#ffffff" style=""/>
+                    </div>
+                    <div class="right">
+                        输出边长
+                        <input type="number" value="200" id="select_number"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 规范显示原图+背景 -->
+        <div class=" container item">
+            <div class="col-sm-6 col-md-6 col-lg-6 ">
+                <div class="thumbnail">
+                    <div id="show">
+                        <img style="opacity: 0" id="chooes_img">
+                    </div>
+                </div>
+            </div>
+            <!-- 九空格显示 -->
+            <div class="col-sm-6 col-md-6 col-lg-6 ">
+                <div id="last" class="thumbnail">
+                    <!-- 加载gif -->
+                    <div id="imgBox" hidden><img src="loading.jpg" width="100" height="100"/></div>
+                </div>
+            </div>
+
+            <!-- 生成图片按钮 --> 
+            <div class="generate">
+                <button id="btn" class="btn btn-info">生成图片</button>
+            </div>
+        </div>
+
+        <!-- 加载gif，在chooes_img后放置 -->
+        <div id="imgBox2" hidden>
+            加载图片中...
+            <img src="loading.jpg" width="30" height="30">
+        </div>
+      <script>
+
+            var btn = document.getElementById('btn');
+            var last = document.getElementById('last');
+            var chooes_img = document.getElementById('chooes_img'),
+                chooes_img0 = document.getElementsByTagName("img")[0];
+            var change = document.getElementById('change');
+            var imgBox = document.getElementById('imgBox');
+            var imgBox2 = document.getElementById('imgBox2');
+            var select_color = document.getElementById('select_color');
+            var color = 'rgba(0,0,0,0)';
+            var set_long = 200;  //九空格默认单张图片的大小
+                      
+
+            //如果是png格式的图片，可自定义
+            select_color.onchange = function(){
+                color = this.value;
+                document.getElementById('show').style.background = color;
+            };
+
+            //可自定义的九空格单张图片大小
+            select_number.onchange = function(){
+                set_long = this.value;
+            };
+
+            // 当从本地选择页面后出发onchange事件
+            change.onchange = function(event){
+                chooes_img.style.opacity = 0;
+                imgBox2.hidden = false;
                 var file = event.target.files[0];
                 url = URL.createObjectURL(file);
-                chooesImg.src = url;
+                chooes_img.src = url;
+                console.log(file);
+                console.log(url);
+                //new Promise = function()
                 setTimeout(() => {  //异步处理
-                    let c = document.createElement('canvas'), //创建一个画布，将图片调整至展示区
-                        ctx = c.getContext('2d');
-                    let mylong = 400; //画布的大小默认为400px*400px
-                    var imgWidth = chooesImg0.naturalWidth,  //获取到选择图片的原生信息来获取图片高度和宽度
-                        imgHeight = chooesImg0.naturalHeight;
-                    var x = 0;
-                    var y = 0;
-                    if(imgWidth > imgHeight){
-                        mylong = imgWidth; //如果宽度比高度大，则取图像的宽度作为正方形画布的边长
-                        x = 0;  //横坐标为0
-                        y = mylong/2 - imgHeight/2; //纵坐标为画布大小中间值减去图像高度的中间值
-                    }else{ 
-                        mylong = imgHeight; //如果高度比宽度大，则取图像的长度作为正方形画布的边长
-                        x = mylong/2 - imgWidth/2; // //横坐标为画布大小中间值减去图像宽度的中间值
-                        y = 0; //纵坐标为0
-                    }
-                    c.width = mylong;
-                    c.height = mylong;
-                    
-                    ctx.fillStyle="red";  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
-                    ctx.fillRect(0,0,mylong,mylong);
-                    ctx.fill();
-                    ctx.drawImage(chooesImg,0,0,imgWidth,imgHeight,x,y,imgWidth,imgHeight);
-                    let curSrc = c.toDataURL("image/png"); //将图片转化成base64编码
-                    chooesImg.src = curSrc;
-                }, 2);
-            }
-        }
-        
-        
-        btn.onclick  = function(){
-            imgBox.hidden = false; //添加加载图
-            last.innerHTML = "";  //每次点击都先清除再生成
-            setTimeout(() => { //异步处理，没有这个的话，页面在加载时imgBox.hidden将不起作用
-                for(var i = 0; i < 9 ; i++){ //生成九张图片
-                    let c = document.createElement('canvas'),
-                        ctx = c.getContext('2d');
-                    let mylong = 200;
-                    c.width = mylong;
-                    c.height = mylong;
-                    console.log(chooesImg0.naturalWidth);
-                    var width = chooesImg0.naturalWidth * 0.33333333,
-                        height = chooesImg0.naturalHeight * 0.33333333;
-                    var arrW = [0, width, width*2],
-                        arrH = [0, height, height*2];
-                    ctx.drawImage(chooesImg,arrW[i%3],arrH[Math.floor(i/3)],width,height,0,0,mylong,mylong);
-                    //arrW[i%3],arrH[Math.floor(i/3)]的结构是这样的
-                    // [0,0,]
-                    // [width,0]
-                    // [width*2,0]
-                    // [0,height]
-                    // [width,height]
-                    // [width*2,height]
-                    // [0,height*2]
-                    // [width,height*2]
-
-                    if(i == 8){ imgBox.hidden = true;} //将加载隐藏
-                    let curSrc = c.toDataURL("image/png");
-                    var imgelse = document.createElement('img');
-                    imgelse.src = curSrc;
-                    last.append(imgelse); //将生成图片放入div中
+                let c = document.createElement('canvas'), //创建一个画布，将图片调整至展示区
+                    ctx = c.getContext('2d');
+                let my_long = 400; //画布的大小默认为400px*400px
+                var imgWidth = chooes_img0.naturalWidth,  //获取到选择图片的原生信息来获取图片高度和宽度
+                    imgHeight = chooes_img0.naturalHeight;
+                var x = 0;
+                var y = 0;
+                if(imgWidth > imgHeight){
+                    my_long = imgWidth; //如果宽度比高度大，则取图像的宽度作为正方形画布的边长
+                    x = 0;  //横坐标为0
+                    y = my_long/2 - imgHeight/2; //纵坐标为画布大小中间值减去图像高度的中间值
+                }else{ 
+                    my_long = imgHeight; //如果高度比宽度大，则取图像的长度作为正方形画布的边长
+                    x = my_long/2 - imgWidth/2; // //横坐标为画布大小中间值减去图像宽度的中间值
+                    y = 0; //纵坐标为0
                 }
-            }, 2);
-        }
-    </script>
-</body>
+                c.width = my_long;
+                c.height = my_long;
+                ctx.drawImage(chooes_img,0,0,imgWidth,imgHeight,x,y,imgWidth,imgHeight);
+                let curSrc = c.toDataURL("image/png"); //将图片转化成base64编码
+                chooes_img.src = curSrc;
+                chooes_img.style.opacity = 1;
+                imgBox2.hidden = true;
+            }, 500);
+        };
+          
+          
+          btn.onclick  = function(){
+              imgBox.hidden = false; //添加加载图
+              last.innerHTML = "";  //每次点击都先清除再生成
+              setTimeout(() => { //异步处理，没有这个的话，页面在加载时imgBox.hidden将不起作用
+                  for(var i = 0; i < 9 ; i++){ //生成九张图片
+                      let c = document.createElement('canvas'),
+                          ctx = c.getContext('2d');
+                      c.width = set_long;
+                      c.height = set_long;
+                      ctx.fillStyle = color;  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
+                      ctx.fillRect(0,0,set_long,set_long);
+                      var width = chooes_img0.naturalWidth * 0.33333333,
+                          height = chooes_img0.naturalHeight * 0.33333333;
+                      var arrW = [0, width, width*2],
+                          arrH = [0, height, height*2];
+                      ctx.fillStyle = color;  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
+                      ctx.fillRect(0,0,set_long,set_long);
+                      ctx.fill();
+                      ctx.drawImage(chooes_img,arrW[i%3],arrH[Math.floor(i/3)],width,height,0,0,set_long,set_long);
+                      //arrW[i%3],arrH[Math.floor(i/3)]的结构是这样的
+                      // [0,0,]
+                      // [width,0]
+                      // [width*2,0]
+                      // [0,height]
+                      // [width,height]
+                      // [width*2,height]
+                      // [0,height*2]
+                      // [width,height*2]
+
+                      if(i == 8){ imgBox.hidden = true;} //将加载隐藏
+                      let curSrc = c.toDataURL("image/png");
+                      var imgelse = document.createElement('img');
+                      imgelse.src = curSrc;
+                      last.append(imgelse); //将生成图片放入div中
+                  }
+              }, 2);
+          }
+      </script>
+    </body>
 </html>
