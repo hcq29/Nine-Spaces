@@ -59,8 +59,6 @@ p {
     height: 70px;
     line-height: 30px;
 }
-.left{
-}
 .input_color{
     display: block;
     outline:none;
@@ -120,6 +118,9 @@ p {
     top: 110px;
     width: 100%;
     text-align: center;
+}
+#btn{
+    margin-right: 50px;
 }
 .generate{
     margin-bottom: 20px;
