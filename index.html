@@ -9,7 +9,7 @@
         <!-- Bootstrap -->
         <link href="static/css/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" href="static/css/index.css">
-        
+   
     </head>
     <body>
         <div class="jumbotron masthead">
@@ -207,6 +207,7 @@
                             zip.generateAsync({type:"blob"}).then(function(content) { //生成一个zip文件
                                 saveAs(content, "images.zip");
                             });
+
                             $('#status').text('打包完成！等待下载...');
 
                             setTimeout(function(){
