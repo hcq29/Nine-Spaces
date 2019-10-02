@@ -59,8 +59,6 @@ p {
     height: 70px;
     line-height: 30px;
 }
-.left{
-}
 .input_color{
     display: block;
     outline:none;
@@ -111,15 +109,31 @@ p {
     padding: 1.5px;
     float: left;
 }
+#imgBox{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
 #imgBox img{
-	margin-left: 100px;
-    margin-top: 100px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
 }
 #imgBox2{
     position: absolute;
     top: 110px;
     width: 100%;
     text-align: center;
+}
+#status{
+    color: green;
+}
+#btn{
+    margin-right: 50px;
 }
 .generate{
     margin-bottom: 20px;

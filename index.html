@@ -7,12 +7,11 @@
         <title>Nine Spaces</title>
 
         <!-- Bootstrap -->
-        <link href="bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
-        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/my.css">
+        <link href="static/css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="static/css/index.css">
         
     </head>
     <body>
-
         <div class="jumbotron masthead">
             <div class="container">
                 <!-- 选择图片 -->
@@ -24,7 +23,7 @@
                 <div class="custom">
                     <div class='left'>
                         背景颜色
-                        <input type="color" class="input_color" name="bgcolor" id="select_color" value="#ffffff" style=""/>
+                        <input type="color" class="input_color" name="bgcolor" id="select_color" value="#ffffff"/>
                     </div>
                     <div class="right">
                         输出边长
@@ -44,19 +43,22 @@
             </div>
             <!-- 九空格显示 -->
             <div class="col-sm-6 col-md-6 col-lg-6 ">
-                <div id="last" class="thumbnail">
-                    <!-- 加载gif -->
-                    <div id="imgBox" hidden><img src="loading.jpg" width="100" height="100"/></div>
-                </div>
+                <div id="last" class="thumbnail"></div>
+                <!-- 加载gif -->
+                <div id="imgBox" hidden><img src="loading.jpg" width="100" height="100"/></div>
             </div>
 
-            <!-- 生成图片按钮 --> 
+            <!-- 生成图片按钮、打包下载按钮 --> 
             <div class="generate">
-                <button id="btn" class="btn btn-info">生成图片</button>
+                <button id="btn" class="btn btn-info">生成九空格</button>
+                <button  class="btn btn-success" id="packageImgs">
+                    打包下载
+                </button>
+                <div id="status"></div>
             </div>
         </div>
 
-        <!-- 加载gif，在chooes_img后放置 -->
+        <!-- 加载gif，在chooes_img后放置,因为chooes_img0被选中 -->
         <div id="imgBox2" hidden>
             加载图片中...
             <img src="loading.jpg" width="30" height="30">
@@ -70,15 +72,17 @@
             var change = document.getElementById('change');
             var imgBox = document.getElementById('imgBox');
             var imgBox2 = document.getElementById('imgBox2');
+            var show = document.getElementById('show');
             var select_color = document.getElementById('select_color');
+            var status = document.getElementById('status');
+            var packageImgs = document.getElementById('packageImgs');
             var color = 'rgba(0,0,0,0)';
             var set_long = 200;  //九空格默认单张图片的大小
                       
-
             //如果是png格式的图片，可自定义
             select_color.onchange = function(){
                 color = this.value;
-                document.getElementById('show').style.background = color;
+                show.style.background = color;
             };
 
             //可自定义的九空格单张图片大小
@@ -88,79 +92,165 @@
 
             // 当从本地选择页面后出发onchange事件
             change.onchange = function(event){
+                var file = event.target.files[0];
+                if(file == undefined)return false;
                 chooes_img.style.opacity = 0;
                 imgBox2.hidden = false;
-                var file = event.target.files[0];
                 url = URL.createObjectURL(file);
                 chooes_img.src = url;
-                console.log(file);
-                console.log(url);
                 //new Promise = function()
                 setTimeout(() => {  //异步处理
-                let c = document.createElement('canvas'), //创建一个画布，将图片调整至展示区
-                    ctx = c.getContext('2d');
-                let my_long = 400; //画布的大小默认为400px*400px
-                var imgWidth = chooes_img0.naturalWidth,  //获取到选择图片的原生信息来获取图片高度和宽度
-                    imgHeight = chooes_img0.naturalHeight;
-                var x = 0;
-                var y = 0;
-                if(imgWidth > imgHeight){
-                    my_long = imgWidth; //如果宽度比高度大，则取图像的宽度作为正方形画布的边长
-                    x = 0;  //横坐标为0
-                    y = my_long/2 - imgHeight/2; //纵坐标为画布大小中间值减去图像高度的中间值
-                }else{ 
-                    my_long = imgHeight; //如果高度比宽度大，则取图像的长度作为正方形画布的边长
-                    x = my_long/2 - imgWidth/2; // //横坐标为画布大小中间值减去图像宽度的中间值
-                    y = 0; //纵坐标为0
+                    let c = document.createElement('canvas'), //创建一个画布，将图片调整至展示区
+                        ctx = c.getContext('2d');
+                    let my_long = 400; //画布的大小默认为400px*400px
+                    var imgWidth = chooes_img0.naturalWidth,  //获取到选择图片的原生信息来获取图片高度和宽度
+                        imgHeight = chooes_img0.naturalHeight;
+                    var x = 0;
+                    var y = 0;
+                    if(imgWidth > imgHeight){
+                        my_long = imgWidth; //如果宽度比高度大，则取图像的宽度作为正方形画布的边长
+                        x = 0;  //横坐标为0
+                        y = my_long/2 - imgHeight/2; //纵坐标为画布大小中间值减去图像高度的中间值
+                    }else{ 
+                        my_long = imgHeight; //如果高度比宽度大，则取图像的长度作为正方形画布的边长
+                        x = my_long/2 - imgWidth/2; // //横坐标为画布大小中间值减去图像宽度的中间值
+                        y = 0; //纵坐标为0
+                    }
+                    c.width = my_long;
+                    c.height = my_long;
+                    ctx.drawImage(chooes_img,0,0,imgWidth,imgHeight,x,y,imgWidth,imgHeight);
+                    let curSrc = c.toDataURL("image/png"); //将图片转化成base64编码
+                    chooes_img.src = curSrc;
+                    chooes_img.style.opacity = 1;
+                    imgBox2.hidden = true;
+                }, 500);
+            };
+          
+          
+            btn.onclick  = function(){
+                if(chooes_img.src == ''){
+                    alert('请选择图片！')
+                    return false
                 }
-                c.width = my_long;
-                c.height = my_long;
-                ctx.drawImage(chooes_img,0,0,imgWidth,imgHeight,x,y,imgWidth,imgHeight);
-                let curSrc = c.toDataURL("image/png"); //将图片转化成base64编码
-                chooes_img.src = curSrc;
-                chooes_img.style.opacity = 1;
-                imgBox2.hidden = true;
-            }, 500);
-        };
-          
-          
-          btn.onclick  = function(){
-              imgBox.hidden = false; //添加加载图
-              last.innerHTML = "";  //每次点击都先清除再生成
-              setTimeout(() => { //异步处理，没有这个的话，页面在加载时imgBox.hidden将不起作用
-                  for(var i = 0; i < 9 ; i++){ //生成九张图片
-                      let c = document.createElement('canvas'),
-                          ctx = c.getContext('2d');
-                      c.width = set_long;
-                      c.height = set_long;
-                      ctx.fillStyle = color;  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
-                      ctx.fillRect(0,0,set_long,set_long);
-                      var width = chooes_img0.naturalWidth * 0.33333333,
-                          height = chooes_img0.naturalHeight * 0.33333333;
-                      var arrW = [0, width, width*2],
-                          arrH = [0, height, height*2];
-                      ctx.fillStyle = color;  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
-                      ctx.fillRect(0,0,set_long,set_long);
-                      ctx.fill();
-                      ctx.drawImage(chooes_img,arrW[i%3],arrH[Math.floor(i/3)],width,height,0,0,set_long,set_long);
-                      //arrW[i%3],arrH[Math.floor(i/3)]的结构是这样的
-                      // [0,0,]
-                      // [width,0]
-                      // [width*2,0]
-                      // [0,height]
-                      // [width,height]
-                      // [width*2,height]
-                      // [0,height*2]
-                      // [width,height*2]
+                imgBox.hidden = false; //添加加载图
+                last.innerHTML = "";  //每次点击都先清除再生成
+                setTimeout(() => { //异步处理，没有这个的话，页面在加载时imgBox.hidden将不起作用
+                    for(var i = 0; i < 9 ; i++){ //生成九张图片
+                        let c = document.createElement('canvas'),
+                            ctx = c.getContext('2d');
+                        c.width = set_long;
+                        c.height = set_long;
+                        ctx.fillStyle = color;  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
+                        ctx.fillRect(0,0,set_long,set_long);
+                        var width = chooes_img0.naturalWidth * 0.33333333,
+                            height = chooes_img0.naturalHeight * 0.33333333;
+                        var arrW = [0, width, width*2],
+                            arrH = [0, height, height*2];
+                        ctx.fillStyle = color;  //如果是png格式的图片，可以选择自己想要的填充（背景）颜色，后续添加
+                        ctx.fillRect(0,0,set_long,set_long);
+                        ctx.fill();
+                        ctx.drawImage(chooes_img,arrW[i%3],arrH[Math.floor(i/3)],width,height,0,0,set_long,set_long);
+                        //arrW[i%3],arrH[Math.floor(i/3)]的结构是这样的
+                        // [0,0,]
+                        // [width,0]
+                        // [width*2,0]
+                        // [0,height]
+                        // [width,height]
+                        // [width*2,height]
+                        // [0,height*2]
+                        // [width,height*2]
 
-                      if(i == 8){ imgBox.hidden = true;} //将加载隐藏
-                      let curSrc = c.toDataURL("image/png");
-                      var imgelse = document.createElement('img');
-                      imgelse.src = curSrc;
-                      last.append(imgelse); //将生成图片放入div中
-                  }
-              }, 2);
-          }
-      </script>
+                        if(i == 8){ imgBox.hidden = true;} //将加载隐藏
+                        let curSrc = c.toDataURL("image/png");
+                        var imgelse = document.createElement('img');
+                        imgelse.src = curSrc;
+                        last.append(imgelse); //将生成图片放入div中
+                    }
+                }, 200);
+            }
+
+            // 打包
+            packageImgs.onclick = function(){
+                
+                var imgs = last.getElementsByTagName('img');
+                var imgs_length = imgs.length;
+                if(imgs_length == 0){
+                    alert('请选择图片！');
+                    return false;
+                }
+                
+                $('#status').text('打包中...');
+                
+                var imgBase64 = [];
+                var zip = new JSZip(); //创建一个JSZip实例
+                var img = zip.folder("images"); //使用.folder(folderName)添加一个文件夹，名字叫images
+                    
+                for(var i = 0 ; i < imgs_length; i++){
+                    var src = imgs[i].getAttribute("src");
+                    getBase64(src)  //获取base64编码
+                            .then(function(base64){
+                                imgBase64.push(base64.substring(22));
+                                $('#status').text('已完成：' + imgBase64.length + '/' + imgs_length);
+                            },function(err){
+                                console.log(err);//打印异常信息
+                            }); 
+                }
+
+                
+                // 另存为
+                function save_as(){
+                    setTimeout(function(){
+                        if(imgs_length == imgBase64.length){
+                            for(var i = 0 ; i < imgs_length ; i++){
+                                img.file(i + '.jpg', imgBase64[i], {base64: true}); //使用.file(fileName,fileContent,base64FLag)在文件夹下添加一个图片文件
+                            }
+                            zip.generateAsync({type:"blob"}).then(function(content) { //生成一个zip文件
+                                saveAs(content, "images.zip");
+                            });
+                            $('#status').text('打包完成！等待下载...');
+
+                            setTimeout(function(){
+                                $('#status').text('');
+                            },3000)
+                            
+                        }else{
+                            save_as();
+                        }
+                    },100);
+                    
+                }
+                
+                save_as();
+            }
+            
+            //传入图片路径，返回base64
+            function getBase64(img){
+                var image = new Image();
+                image.crossOrigin = 'Anonymous';
+                image.src = img;
+                var deferred = $.Deferred();
+                if(img){
+                    image.onload = function (){
+                        deferred.resolve(getBase64Image(image));
+                    }
+                    return deferred.promise();
+                }
+                function getBase64Image(img,width,height) {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = width ? width : img.width;
+                    canvas.height = height ? height : img.height;
+            
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    var dataURL = canvas.toDataURL();
+                    return dataURL;
+                }
+            }
+            
+        
+        </script>
+        <script src="static/js/jquery.min.js"></script>
+        <script src="static/js/FileSaver.js"></script>
+        <script src="static/js/jszip.min.js"></script>
     </body>
 </html>
