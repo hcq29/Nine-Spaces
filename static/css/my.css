@@ -1,0 +1,128 @@
+.jumbotron{
+    position: relative;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 30px rgba(0,0,0,.075);
+    background-color: #fff;
+}
+.masthead h2 {
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 1.25;
+}
+.masthead h1 {
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -2px;
+    font-weight: 700;
+}
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.masthead {
+    width: 100%;
+    margin-bottom: 0;
+}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border-radius: 4px;
+    padding: 1.2rem 1.6rem;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+    font-size: 3rem;
+}
+.file input {
+    position: absolute;
+    font-size: 10rem;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+.custom{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 70px;
+    line-height: 30px;
+}
+.input_color{
+    display: block;
+    outline:none;
+    border: none;
+    width: 50px;
+    height: 30px;
+    background: #F49AAF;
+}
+#select_number{
+    display: block;
+    width: 50px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #F8AAAA;
+}
+.input_color[type='color']::-webkit-color-swatch-wrapper{padding: 0;}
+.input_color[type='color']::-webkit-color-swatch{border: 0;border-radius: 10px;}
+.thumbnail {
+    display: block;
+    height: 310px;
+    padding: 4px;
+    margin-bottom: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    max-width: 310px;
+	max-height: 310px;
+    min-width: 310px;
+	min-height: 310px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 1px solid #666;
+    border-radius: 4px;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+#show{
+    height: 100%;
+}
+#show img{
+    width: 100%;
+    height: 100%;
+}
+#last img{
+    width: 33.33333%;
+    height: 33.333333%;
+    padding: 1.5px;
+    float: left;
+}
+#imgBox img{
+	margin-left: 100px;
+    margin-top: 100px;
+}
+#imgBox2{
+    position: absolute;
+    top: 110px;
+    width: 100%;
+    text-align: center;
+}
+#btn{
+    margin-right: 50px;
+}
+.generate{
+    margin-bottom: 20px;
+    text-align: center;
+}
